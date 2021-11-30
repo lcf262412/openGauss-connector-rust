@@ -1,36 +1,46 @@
-# openGauss-connector-rust
+# Rust-Postgres
 
-#### Description
-{**When you're done, you can delete the content in this README and update the file with details for others getting started with your repository**}
+OpenGuass support for Rust, based on [Rust-Postgres](https://github.com/sfackler/rust-postgres).
 
-#### Software Architecture
-Software architecture description
+## postgres [![Latest Version](https://img.shields.io/crates/v/postgres.svg)](https://crates.io/crates/postgres)
 
-#### Installation
+[Documentation](https://docs.rs/postgres)
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+A native, synchronous PostgreSQL client.
 
-#### Instructions
+## tokio-postgres [![Latest Version](https://img.shields.io/crates/v/tokio-postgres.svg)](https://crates.io/crates/tokio-postgres)
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+[Documentation](https://docs.rs/tokio-postgres)
 
-#### Contribution
+A native, asynchronous PostgreSQL client.
 
-1.  Fork the repository
-2.  Create Feat_xxx branch
-3.  Commit your code
-4.  Create Pull Request
+## postgres-types [![Latest Version](https://img.shields.io/crates/v/postgres-types.svg)](https://crates.io/crates/postgres-types)
 
+[Documentation](https://docs.rs/postgres-types)
 
-#### Gitee Feature
+Conversions between Rust and Postgres types.
 
-1.  You can use Readme\_XXX.md to support different languages, such as Readme\_en.md, Readme\_zh.md
-2.  Gitee blog [blog.gitee.com](https://blog.gitee.com)
-3.  Explore open source project [https://gitee.com/explore](https://gitee.com/explore)
-4.  The most valuable open source project [GVP](https://gitee.com/gvp)
-5.  The manual of Gitee [https://gitee.com/help](https://gitee.com/help)
-6.  The most popular members  [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+## postgres-native-tls [![Latest Version](https://img.shields.io/crates/v/postgres-native-tls.svg)](https://crates.io/crates/postgres-native-tls)
+
+[Documentation](https://docs.rs/postgres-native-tls)
+
+TLS support for postgres and tokio-postgres via native-tls.
+
+## postgres-openssl [![Latest Version](https://img.shields.io/crates/v/postgres-openssl.svg)](https://crates.io/crates/postgres-openssl)
+
+[Documentation](https://docs.rs/postgres-openssl)
+
+TLS support for postgres and tokio-postgres via openssl.
+
+# Running test suite
+
+The test suite requires postgres to be running in the correct configuration. The easiest way to do this is with docker:
+
+1. Install `docker` and `docker-compose`.
+    1. On ubuntu: `sudo apt install docker.io docker-compose`.
+1. Make sure your user has permissions for docker.
+    1. On ubuntu: ``sudo usermod -aG docker $USER``
+1. Change to top-level directory of `rust-postgres` repo.
+1. Run `docker-compose up -d`.
+1. Run `cargo test`.
+1. Run `docker-compose stop`.
