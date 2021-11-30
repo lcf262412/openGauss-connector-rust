@@ -1,4 +1,4 @@
-# Rust-Postgres
+# openGauss-connector-rust
 
 OpenGuass support for Rust, based on [Rust-Postgres](https://github.com/sfackler/rust-postgres).
 
