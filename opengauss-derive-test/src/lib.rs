@@ -1,7 +1,7 @@
 #![cfg(test)]
 
 use postgres::Client;
-use postgres_types::{FromSqlOwned, ToSql};
+use opengauss_types::{FromSqlOwned, ToSql};
 use std::fmt;
 
 mod composites;

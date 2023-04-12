@@ -20,7 +20,7 @@ use futures::channel::mpsc;
 use futures::{future, pin_mut, ready, StreamExt, TryStreamExt};
 use parking_lot::Mutex;
 use postgres_protocol::message::backend::Message;
-use postgres_types::BorrowToSql;
+use opengauss_types::BorrowToSql;
 use std::collections::HashMap;
 use std::fmt;
 use std::sync::Arc;

@@ -8,7 +8,7 @@ members = [
     "opengauss-openssl",
     "opengauss-protocol",
     "opengauss-types",
-    "tokio-postgres",
+    "tokio-opengauss",
 ]
 
 [profile.release]

@@ -15,8 +15,8 @@ pub fn domain_body(name: &str, field: &syn::Field) -> TokenStream {
         }
 
         match *type_.kind() {
-            ::postgres_types::Kind::Domain(ref type_) => {
-                <#ty as ::postgres_types::ToSql>::accepts(type_)
+            ::opengauss_types::Kind::Domain(ref type_) => {
+                <#ty as ::opengauss_types::ToSql>::accepts(type_)
             }
             _ => false,
         }
@@ -33,7 +33,7 @@ pub fn enum_body(name: &str, variants: &[Variant]) -> TokenStream {
         }
 
         match *type_.kind() {
-            ::postgres_types::Kind::Enum(ref variants) => {
+            ::opengauss_types::Kind::Enum(ref variants) => {
                 if variants.len() != #num_variants {
                     return false;
                 }
@@ -65,7 +65,7 @@ pub fn composite_body(name: &str, trait_: &str, fields: &[Field]) -> TokenStream
         }
 
         match *type_.kind() {
-            ::postgres_types::Kind::Composite(ref fields) => {
+            ::opengauss_types::Kind::Composite(ref fields) => {
                 if fields.len() != #num_fields {
                     return false;
                 }
@@ -74,7 +74,7 @@ pub fn composite_body(name: &str, trait_: &str, fields: &[Field]) -> TokenStream
                     match f.name() {
                         #(
                             #field_names => {
-                                <#field_types as ::postgres_types::#traits>::accepts(f.type_())
+                                <#field_types as ::opengauss_types::#traits>::accepts(f.type_())
                             }
                         )*
                         _ => false,

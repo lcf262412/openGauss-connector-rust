@@ -6,7 +6,7 @@ use byteorder::{BigEndian, ByteOrder};
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 use futures::{ready, SinkExt, Stream};
 use pin_project_lite::pin_project;
-use postgres_types::BorrowToSql;
+use opengauss_types::BorrowToSql;
 use std::convert::TryFrom;
 use std::io;
 use std::io::Cursor;

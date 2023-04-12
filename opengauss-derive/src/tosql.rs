@@ -56,22 +56,22 @@ pub fn expand_derive_tosql(input: DeriveInput) -> Result<TokenStream, Error> {
 
     let ident = &input.ident;
     let out = quote! {
-        impl postgres_types::ToSql for #ident {
+        impl opengauss_types::ToSql for #ident {
             fn to_sql(&self,
-                      _type: &postgres_types::Type,
-                      buf: &mut postgres_types::private::BytesMut)
-                      -> std::result::Result<postgres_types::IsNull,
+                      _type: &opengauss_types::Type,
+                      buf: &mut opengauss_types::private::BytesMut)
+                      -> std::result::Result<opengauss_types::IsNull,
                                              std::boxed::Box<std::error::Error +
                                                              std::marker::Sync +
                                                              std::marker::Send>> {
                 #to_sql_body
             }
 
-            fn accepts(type_: &postgres_types::Type) -> bool {
+            fn accepts(type_: &opengauss_types::Type) -> bool {
                 #accepts_body
             }
 
-            postgres_types::to_sql_checked!();
+            opengauss_types::to_sql_checked!();
         }
     };
 
@@ -91,18 +91,18 @@ fn enum_body(ident: &Ident, variants: &[Variant]) -> TokenStream {
         };
 
         buf.extend_from_slice(s.as_bytes());
-        std::result::Result::Ok(postgres_types::IsNull::No)
+        std::result::Result::Ok(opengauss_types::IsNull::No)
     }
 }
 
 fn domain_body() -> TokenStream {
     quote! {
         let type_ = match *_type.kind() {
-            postgres_types::Kind::Domain(ref type_) => type_,
+            opengauss_types::Kind::Domain(ref type_) => type_,
             _ => unreachable!(),
         };
 
-        postgres_types::ToSql::to_sql(&self.0, type_, buf)
+        opengauss_types::ToSql::to_sql(&self.0, type_, buf)
     }
 }
 
@@ -112,7 +112,7 @@ fn composite_body(fields: &[Field]) -> TokenStream {
 
     quote! {
         let fields = match *_type.kind() {
-            postgres_types::Kind::Composite(ref fields) => fields,
+            opengauss_types::Kind::Composite(ref fields) => fields,
             _ => unreachable!(),
         };
 
@@ -125,14 +125,14 @@ fn composite_body(fields: &[Field]) -> TokenStream {
             buf.extend_from_slice(&[0; 4]);
             let r = match field.name() {
                 #(
-                    #field_names => postgres_types::ToSql::to_sql(&self.#field_idents, field.type_(), buf),
+                    #field_names => opengauss_types::ToSql::to_sql(&self.#field_idents, field.type_(), buf),
                 )*
                 _ => unreachable!(),
             };
 
             let count = match r? {
-                postgres_types::IsNull::Yes => -1,
-                postgres_types::IsNull::No => {
+                opengauss_types::IsNull::Yes => -1,
+                opengauss_types::IsNull::No => {
                     let len = buf.len() - base - 4;
                     if len > i32::max_value() as usize {
                         return std::result::Result::Err(
@@ -145,6 +145,6 @@ fn composite_body(fields: &[Field]) -> TokenStream {
             buf[base..base + 4].copy_from_slice(&count.to_be_bytes());
         }
 
-        std::result::Result::Ok(postgres_types::IsNull::No)
+        std::result::Result::Ok(opengauss_types::IsNull::No)
     }
 }

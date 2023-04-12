@@ -1,4 +1,4 @@
-use postgres_types::{FromSql, ToSql};
+use opengauss_types::{FromSql, ToSql};
 
 #[derive(FromSql)]
 #[postgres(foo = "bar")]

@@ -27,7 +27,7 @@
 //!
 //! ```rust
 //! # #[cfg(feature = "derive")]
-//! use postgres_types::{ToSql, FromSql};
+//! use opengauss_types::{ToSql, FromSql};
 //!
 //! # #[cfg(feature = "derive")]
 //! #[derive(Debug, ToSql, FromSql)]
@@ -48,7 +48,7 @@
 //!
 //! ```rust
 //! # #[cfg(feature = "derive")]
-//! use postgres_types::{ToSql, FromSql};
+//! use opengauss_types::{ToSql, FromSql};
 //!
 //! # #[cfg(feature = "derive")]
 //! #[derive(Debug, ToSql, FromSql)]
@@ -69,7 +69,7 @@
 //!
 //! ```rust
 //! # #[cfg(feature = "derive")]
-//! use postgres_types::{ToSql, FromSql};
+//! use opengauss_types::{ToSql, FromSql};
 //!
 //! # #[cfg(feature = "derive")]
 //! #[derive(Debug, ToSql, FromSql)]
@@ -96,7 +96,7 @@
 //!
 //! ```rust
 //! # #[cfg(feature = "derive")]
-//! use postgres_types::{ToSql, FromSql};
+//! use opengauss_types::{ToSql, FromSql};
 //!
 //! # #[cfg(feature = "derive")]
 //! #[derive(Debug, ToSql, FromSql)]
