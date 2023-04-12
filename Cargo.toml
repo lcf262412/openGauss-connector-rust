@@ -1,13 +1,13 @@
 [workspace]
 members = [
     "codegen",
-    "postgres",
-    "postgres-derive",
-    "postgres-derive-test",
-    "postgres-native-tls",
-    "postgres-openssl",
-    "postgres-protocol",
-    "postgres-types",
+    "opengauss",
+    "opengauss-derive",
+    "opengauss-derive-test",
+    "opengauss-native-tls",
+    "opengauss-openssl",
+    "opengauss-protocol",
+    "opengauss-types",
     "tokio-postgres",
 ]
 

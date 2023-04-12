@@ -1,6 +1,6 @@
 version: '2'
 services:
   postgres:
-    image: "sfackler/rust-postgres-test:6"
+    image: "opengauss/opengauss:5.0.0"
     ports:
-    - 5433:5433
+    - 5433:5432
