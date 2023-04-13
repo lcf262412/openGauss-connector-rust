@@ -1,6 +1,6 @@
 use bytes::BytesMut;
 use eui48_1::MacAddress;
-use postgres_protocol::types;
+use opengauss_protocol::types;
 use std::error::Error;
 
 use crate::{FromSql, IsNull, ToSql, Type};

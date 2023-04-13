@@ -1,6 +1,6 @@
 use bit_vec_06::BitVec;
 use bytes::BytesMut;
-use postgres_protocol::types;
+use opengauss_protocol::types;
 use std::error::Error;
 
 use crate::{FromSql, IsNull, ToSql, Type};

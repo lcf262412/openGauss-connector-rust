@@ -114,7 +114,7 @@
 #![warn(clippy::all, rust_2018_idioms, missing_docs)]
 
 use fallible_iterator::FallibleIterator;
-use postgres_protocol::types::{self, ArrayDimension};
+use opengauss_protocol::types::{self, ArrayDimension};
 use std::any::type_name;
 use std::borrow::Cow;
 use std::collections::HashMap;
@@ -133,7 +133,7 @@ pub use crate::serde_json_1::Json;
 use crate::type_gen::{Inner, Other};
 
 #[doc(inline)]
-pub use postgres_protocol::Oid;
+pub use opengauss_protocol::Oid;
 
 #[doc(inline)]
 pub use pg_lsn::PgLsn;
@@ -824,8 +824,8 @@ impl<'a, T: ToSql> ToSql for &'a [T] {
             member_type.oid(),
             self.iter(),
             |e, w| match e.to_sql(member_type, w)? {
-                IsNull::No => Ok(postgres_protocol::IsNull::No),
-                IsNull::Yes => Ok(postgres_protocol::IsNull::Yes),
+                IsNull::No => Ok(opengauss_protocol::IsNull::No),
+                IsNull::Yes => Ok(opengauss_protocol::IsNull::Yes),
             },
             w,
         )?;

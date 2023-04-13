@@ -1,7 +1,7 @@
 use bytes::BytesMut;
 use fallible_iterator::FallibleIterator;
 use geo_types_06::{Coordinate, LineString, Point, Rect};
-use postgres_protocol::types;
+use opengauss_protocol::types;
 use std::error::Error;
 
 use crate::{FromSql, IsNull, ToSql, Type};

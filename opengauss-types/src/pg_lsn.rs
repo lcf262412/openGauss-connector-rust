@@ -2,7 +2,7 @@
 //! (WAL), also known as the transaction log.
 
 use bytes::BytesMut;
-use postgres_protocol::types;
+use opengauss_protocol::types;
 use std::error::Error;
 use std::fmt;
 use std::str::FromStr;

@@ -14,7 +14,7 @@ use crate::{
 };
 use bytes::Buf;
 use futures::TryStreamExt;
-use postgres_protocol::message::frontend;
+use opengauss_protocol::message::frontend;
 use tokio::io::{AsyncRead, AsyncWrite};
 
 /// A representation of a openGauss database transaction.

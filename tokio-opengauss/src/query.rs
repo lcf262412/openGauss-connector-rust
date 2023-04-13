@@ -171,8 +171,8 @@ where
         Some(1),
         params.zip(statement.params()).enumerate(),
         |(idx, (param, ty)), buf| match param.borrow_to_sql().to_sql_checked(ty, buf) {
-            Ok(IsNull::No) => Ok(postgres_protocol::IsNull::No),
-            Ok(IsNull::Yes) => Ok(postgres_protocol::IsNull::Yes),
+            Ok(IsNull::No) => Ok(opengauss_protocol::IsNull::No),
+            Ok(IsNull::Yes) => Ok(opengauss_protocol::IsNull::Yes),
             Err(e) => {
                 error_idx = idx;
                 Err(e)

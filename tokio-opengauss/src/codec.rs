@@ -1,7 +1,7 @@
 use bytes::{Buf, Bytes, BytesMut};
 use fallible_iterator::FallibleIterator;
-use postgres_protocol::message::backend;
-use postgres_protocol::message::frontend::CopyData;
+use opengauss_protocol::message::backend;
+use opengauss_protocol::message::frontend::CopyData;
 use std::io;
 use tokio_util::codec::{Decoder, Encoder};
 
