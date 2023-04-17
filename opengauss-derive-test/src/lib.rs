@@ -1,6 +1,6 @@
 #![cfg(test)]
 
-use postgres::Client;
+use opengauss::Client;
 use opengauss_types::{FromSqlOwned, ToSql};
 use std::fmt;
 

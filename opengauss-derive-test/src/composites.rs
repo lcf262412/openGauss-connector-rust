@@ -1,5 +1,5 @@
 use crate::test_type;
-use postgres::{Client, NoTls};
+use opengauss::{Client, NoTls};
 use opengauss_types::{FromSql, ToSql, WrongType};
 use std::error::Error;
 
