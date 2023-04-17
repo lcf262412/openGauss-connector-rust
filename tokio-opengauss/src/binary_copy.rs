@@ -1,4 +1,4 @@
-//! Utilities for working with the PostgreSQL binary copy format.
+//! Utilities for working with the openGauss binary copy format.
 
 use crate::types::{FromSql, IsNull, ToSql, Type, WrongType};
 use crate::{slice_iter, CopyInSink, CopyOutStream, Error};
@@ -19,7 +19,7 @@ const MAGIC: &[u8] = b"PGCOPY\n\xff\r\n\0";
 const HEADER_LEN: usize = MAGIC.len() + 4 + 4;
 
 pin_project! {
-    /// A type which serializes rows into the PostgreSQL binary copy format.
+    /// A type which serializes rows into the openGauss binary copy format.
     ///
     /// The copy *must* be explicitly completed via the `finish` method. If it is not, the copy will be aborted.
     pub struct BinaryCopyInWriter {
@@ -116,7 +116,7 @@ struct Header {
 }
 
 pin_project! {
-    /// A stream of rows deserialized from the PostgreSQL binary copy format.
+    /// A stream of rows deserialized from the openGauss binary copy format.
     pub struct BinaryCopyOutStream {
         #[pin]
         stream: CopyOutStream,

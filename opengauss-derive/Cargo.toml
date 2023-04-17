@@ -1,7 +1,7 @@
 [package]
 name = "opengauss-derive"
 version = "0.1.0"
-authors = ["Steven Fackler <sfackler@palantir.com>"]
+authors = ["He Guofeng <hgf199@126.com>"]
 license = "MIT/Apache-2.0"
 edition = "2018"
 description = "An internal crate used by opengauss-types"

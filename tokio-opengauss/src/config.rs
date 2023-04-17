@@ -113,7 +113,7 @@ pub enum Host {
 /// ```
 ///
 /// ```not_rust
-/// host=/var/lib/postgresql,localhost port=1234 user=postgres password='password with spaces'
+/// host=/var/lib/opengauss,localhost port=1234 user=postgres password='password with spaces'
 /// ```
 ///
 /// ```not_rust
@@ -122,27 +122,28 @@ pub enum Host {
 ///
 /// # Url
 ///
-/// This format resembles a URL with a scheme of either `postgres://` or `postgresql://`. All components are optional,
-/// and the format accepts query parameters for all of the key-value pairs described in the section above. Multiple
-/// host/port pairs can be comma-separated. Unix socket paths in the host section of the URL should be percent-encoded,
+/// This format resembles a URL with a scheme of `opengauss://`.
+/// All components are optional, and the format accepts query parameters for all of the key-value pairs described in the section above.
+/// If the scheme is missed, then the sha256 auth method will be used as default.
+/// Multiple host/port pairs can be comma-separated. Unix socket paths in the host section of the URL should be percent-encoded,
 /// as the path component of the URL specifies the database name.
 ///
 /// ## Examples
 ///
 /// ```not_rust
-/// postgresql://user@localhost
+/// opengauss://user@localhost
 /// ```
 ///
 /// ```not_rust
-/// postgresql://user:password@%2Fvar%2Flib%2Fpostgresql/mydb?connect_timeout=10
+/// opengauss://user:password@%2Fvar%2Flib%2Fpostgresql/mydb?connect_timeout=10
 /// ```
 ///
 /// ```not_rust
-/// postgresql://user@host1:1234,host2,host3:5678?target_session_attrs=read-write
+/// opengauss://user@host1:1234,host2,host3:5678?target_session_attrs=read-write
 /// ```
 ///
 /// ```not_rust
-/// postgresql:///mydb?user=user&host=/var/lib/postgresql
+/// opengauss:///mydb?user=user&host=/var/lib/postgresql
 /// ```
 #[derive(PartialEq, Clone)]
 pub struct Config {
@@ -759,7 +760,7 @@ impl<'a> UrlParser<'a> {
     }
 
     fn remove_url_prefix(s: &str) -> Option<&str> {
-        for prefix in &["postgres://", "postgresql://"] {
+        for prefix in &["postgres://", "postgresql://", "opengauss://"] {
             if let Some(stripped) = s.strip_prefix(prefix) {
                 return Some(stripped);
             }

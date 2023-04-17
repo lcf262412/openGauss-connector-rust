@@ -3,7 +3,7 @@ use crate::{CancelToken, CopyInWriter, CopyOutReader, Portal, RowIter, Statement
 use tokio_opengauss::types::{BorrowToSql, ToSql, Type};
 use tokio_opengauss::{Error, Row, SimpleQueryMessage};
 
-/// A representation of a PostgreSQL database transaction.
+/// A representation of a openGauss database transaction.
 ///
 /// Transactions will implicitly roll back by default when dropped. Use the `commit` method to commit the changes made
 /// in the transaction. Transactions can be nested, with inner transactions implemented via savepoints.

@@ -38,25 +38,25 @@ fn settings() {
 
 #[test]
 fn url() {
-    check("postgresql://", &Config::new());
+    check("opengauss://", &Config::new());
     check(
-        "postgresql://localhost",
+        "opengauss://localhost",
         Config::new().host("localhost").port(5432),
     );
     check(
-        "postgresql://localhost:5433",
+        "opengauss://localhost:5433",
         Config::new().host("localhost").port(5433),
     );
     check(
-        "postgresql://localhost/mydb",
+        "opengauss://localhost/mydb",
         Config::new().host("localhost").port(5432).dbname("mydb"),
     );
     check(
-        "postgresql://user@localhost",
+        "opengauss://user@localhost",
         Config::new().user("user").host("localhost").port(5432),
     );
     check(
-        "postgresql://user:secret@localhost",
+        "opengauss://user:secret@localhost",
         Config::new()
             .user("user")
             .password("secret")
@@ -64,7 +64,7 @@ fn url() {
             .port(5432),
     );
     check(
-        "postgresql://other@localhost/otherdb?connect_timeout=10&application_name=myapp",
+        "opengauss://other@localhost/otherdb?connect_timeout=10&application_name=myapp",
         Config::new()
             .user("other")
             .host("localhost")
@@ -74,7 +74,7 @@ fn url() {
             .application_name("myapp"),
     );
     check(
-        "postgresql://host1:123,host2:456/somedb?target_session_attrs=any&application_name=myapp",
+        "opengauss://host1:123,host2:456/somedb?target_session_attrs=any&application_name=myapp",
         Config::new()
             .host("host1")
             .port(123)
@@ -85,18 +85,18 @@ fn url() {
             .application_name("myapp"),
     );
     check(
-        "postgresql:///mydb?host=localhost&port=5433",
+        "opengauss:///mydb?host=localhost&port=5433",
         Config::new().dbname("mydb").host("localhost").port(5433),
     );
     check(
-        "postgresql://[2001:db8::1234]/database",
+        "opengauss://[2001:db8::1234]/database",
         Config::new()
             .host("2001:db8::1234")
             .port(5432)
             .dbname("database"),
     );
     check(
-        "postgresql://[2001:db8::1234]:5433/database",
+        "opengauss://[2001:db8::1234]:5433/database",
         Config::new()
             .host("2001:db8::1234")
             .port(5433)
@@ -104,14 +104,14 @@ fn url() {
     );
     #[cfg(unix)]
     check(
-        "postgresql:///dbname?host=/var/lib/postgresql",
+        "opengauss:///dbname?host=/var/lib/postgresql",
         Config::new()
             .dbname("dbname")
             .host_path("/var/lib/postgresql"),
     );
     #[cfg(unix)]
     check(
-        "postgresql://%2Fvar%2Flib%2Fpostgresql/dbname",
+        "opengauss://%2Fvar%2Flib%2Fpostgresql/dbname",
         Config::new()
             .host_path("/var/lib/postgresql")
             .port(5432)

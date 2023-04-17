@@ -154,7 +154,7 @@ pub(crate) struct SocketConfig {
     pub keepalives_idle: Duration,
 }
 
-/// An asynchronous PostgreSQL client.
+/// An asynchronous openGauss client.
 ///
 /// The client is one half of what is returned when a connection is established. Users interact with the database
 /// through this client object.
@@ -419,7 +419,7 @@ impl Client {
 
     /// Executes a `COPY FROM STDIN` statement, returning a sink used to write the copy data.
     ///
-    /// PostgreSQL does not support parameters in `COPY` statements, so this method does not take any. The copy *must*
+    /// openGauss does not support parameters in `COPY` statements, so this method does not take any. The copy *must*
     /// be explicitly completed via the `Sink::close` or `finish` methods. If it is not, the copy will be aborted.
     ///
     /// # Panics
@@ -436,7 +436,7 @@ impl Client {
 
     /// Executes a `COPY TO STDOUT` statement, returning a stream of the resulting data.
     ///
-    /// PostgreSQL does not support parameters in `COPY` statements, so this method does not take any.
+    /// openGauss does not support parameters in `COPY` statements, so this method does not take any.
     ///
     /// # Panics
     ///

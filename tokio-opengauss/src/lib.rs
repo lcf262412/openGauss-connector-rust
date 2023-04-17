@@ -62,7 +62,7 @@
 //! | receive rows 3 |                 |
 //! ```
 //!
-//! In both cases, the PostgreSQL server is executing the queries sequentially - pipelining just allows both sides of
+//! In both cases, the openGauss server is executing the queries sequentially - pipelining just allows both sides of
 //! the connection to work concurrently when possible.
 //!
 //! Pipelining happens automatically when futures are polled concurrently (for example, by using the futures `join`
