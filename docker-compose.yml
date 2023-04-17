@@ -1,6 +1,6 @@
 version: '2'
 services:
-  postgres:
+  opengauss:
     image: "opengauss/opengauss:5.0.0"
     ports:
     - 5433:5432
