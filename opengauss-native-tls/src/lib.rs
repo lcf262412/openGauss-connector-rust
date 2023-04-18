@@ -4,7 +4,7 @@
 //!
 //! ```no_run
 //! use native_tls::{Certificate, TlsConnector};
-//! use postgres_native_tls::MakeTlsConnector;
+//! use opengauss_native_tls::MakeTlsConnector;
 //! use std::fs;
 //!
 //! # fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -16,7 +16,7 @@
 //! let connector = MakeTlsConnector::new(connector);
 //!
 //! let connect_future = tokio_opengauss::connect(
-//!     "host=localhost user=postgres sslmode=require",
+//!     "host=localhost user=postgres password=openGauss#2023 sslmode=require",
 //!     connector,
 //! );
 //!
@@ -27,7 +27,7 @@
 //!
 //! ```no_run
 //! use native_tls::{Certificate, TlsConnector};
-//! use postgres_native_tls::MakeTlsConnector;
+//! use opengauss_native_tls::MakeTlsConnector;
 //! use std::fs;
 //!
 //! # fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -39,7 +39,7 @@
 //! let connector = MakeTlsConnector::new(connector);
 //!
 //! let client = postgres::Client::connect(
-//!     "host=localhost user=postgres sslmode=require",
+//!     "host=localhost user=postgres password=openGauss#2023 sslmode=require",
 //!     connector,
 //! )?;
 //! # Ok(())
