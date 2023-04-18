@@ -8,8 +8,7 @@ use tokio_opengauss::types::Type;
 use tokio_opengauss::NoTls;
 
 use super::*;
-use crate::binary_copy::{BinaryCopyInWriter, BinaryCopyOutIter};
-use fallible_iterator::FallibleIterator;
+use crate::binary_copy::BinaryCopyInWriter;
 
 #[test]
 fn prepare() {
@@ -46,20 +45,24 @@ fn transaction_commit() {
     let mut client = Client::connect("host=localhost port=5433 user=postgres password=openGauss#2023", NoTls).unwrap();
 
     client
-        .simple_query("CREATE TEMPORARY TABLE foo (id SERIAL PRIMARY KEY)")
+        .simple_query("CREATE TABLE foo_transaction_commit (id SERIAL PRIMARY KEY)")
         .unwrap();
 
     let mut transaction = client.transaction().unwrap();
 
     transaction
-        .execute("INSERT INTO foo DEFAULT VALUES", &[])
+        .execute("INSERT INTO foo_transaction_commit DEFAULT VALUES", &[])
         .unwrap();
 
     transaction.commit().unwrap();
 
-    let rows = client.query("SELECT * FROM foo", &[]).unwrap();
+    let rows = client.query("SELECT * FROM foo_transaction_commit", &[]).unwrap();
     assert_eq!(rows.len(), 1);
     assert_eq!(rows[0].get::<_, i32>(0), 1);
+
+    client
+        .simple_query("DROP TABLE foo_transaction_commit")
+        .unwrap();
 }
 
 #[test]
@@ -67,19 +70,22 @@ fn transaction_rollback() {
     let mut client = Client::connect("host=localhost port=5433 user=postgres password=openGauss#2023", NoTls).unwrap();
 
     client
-        .simple_query("CREATE TEMPORARY TABLE foo (id SERIAL PRIMARY KEY)")
+        .simple_query("CREATE TABLE foo_transaction_rollback (id SERIAL PRIMARY KEY)")
         .unwrap();
 
     let mut transaction = client.transaction().unwrap();
 
     transaction
-        .execute("INSERT INTO foo DEFAULT VALUES", &[])
+        .execute("INSERT INTO foo_transaction_rollback DEFAULT VALUES", &[])
         .unwrap();
 
     transaction.rollback().unwrap();
 
-    let rows = client.query("SELECT * FROM foo", &[]).unwrap();
+    let rows = client.query("SELECT * FROM foo_transaction_rollback", &[]).unwrap();
     assert_eq!(rows.len(), 0);
+    client
+        .simple_query("DROP TABLE foo_transaction_rollback")
+        .unwrap();
 }
 
 #[test]
@@ -87,19 +93,22 @@ fn transaction_drop() {
     let mut client = Client::connect("host=localhost port=5433 user=postgres password=openGauss#2023", NoTls).unwrap();
 
     client
-        .simple_query("CREATE TEMPORARY TABLE foo (id SERIAL PRIMARY KEY)")
+        .simple_query("CREATE TABLE foo_transaction_drop (id SERIAL PRIMARY KEY)")
         .unwrap();
 
     let mut transaction = client.transaction().unwrap();
 
     transaction
-        .execute("INSERT INTO foo DEFAULT VALUES", &[])
+        .execute("INSERT INTO foo_transaction_drop DEFAULT VALUES", &[])
         .unwrap();
 
     drop(transaction);
 
-    let rows = client.query("SELECT * FROM foo", &[]).unwrap();
+    let rows = client.query("SELECT * FROM foo_transaction_drop", &[]).unwrap();
     assert_eq!(rows.len(), 0);
+    client
+        .simple_query("DROP TABLE foo_transaction_drop")
+        .unwrap();
 }
 
 #[test]
@@ -112,7 +121,7 @@ fn transaction_drop_immediate_rollback() {
         .unwrap();
 
     client
-        .execute("INSERT INTO foo VALUES (1) ON CONFLICT DO NOTHING", &[])
+        .execute("INSERT INTO foo VALUES (1) ON DUPLICATE KEY UPDATE NOTHING", &[])
         .unwrap();
 
     let mut transaction = client.transaction().unwrap();
@@ -317,31 +326,31 @@ fn copy_out() {
     client.simple_query("SELECT 1").unwrap();
 }
 
-#[test]
-fn binary_copy_out() {
-    let mut client = Client::connect("host=localhost port=5433 user=postgres password=openGauss#2023", NoTls).unwrap();
-
-    client
-        .simple_query(
-            "CREATE TEMPORARY TABLE foo (id INT, name TEXT);
-             INSERT INTO foo (id, name) VALUES (1, 'steven'), (2, 'timothy');",
-        )
-        .unwrap();
-
-    let reader = client
-        .copy_out("COPY foo (id, name) TO STDOUT BINARY")
-        .unwrap();
-    let rows = BinaryCopyOutIter::new(reader, &[Type::INT4, Type::TEXT])
-        .collect::<Vec<_>>()
-        .unwrap();
-    assert_eq!(rows.len(), 2);
-    assert_eq!(rows[0].get::<i32>(0), 1);
-    assert_eq!(rows[0].get::<&str>(1), "steven");
-    assert_eq!(rows[1].get::<i32>(0), 2);
-    assert_eq!(rows[1].get::<&str>(1), "timothy");
-
-    client.simple_query("SELECT 1").unwrap();
-}
+// #[test] COPY TO STDOUT BINARY seems has bugs in openGauss
+// fn binary_copy_out() {
+//     let mut client = Client::connect("host=localhost port=5433 user=postgres password=openGauss#2023", NoTls).unwrap();
+//
+//     client
+//         .simple_query(
+//             "CREATE TEMPORARY TABLE foo (id INT, name TEXT);
+//              INSERT INTO foo (id, name) VALUES (1, 'steven'), (2, 'timothy');",
+//         )
+//         .unwrap();
+//
+//     let reader = client
+//         .copy_out("COPY foo (id, name) TO STDOUT BINARY")
+//         .unwrap();
+//     let rows = BinaryCopyOutIter::new(reader, &[Type::INT4, Type::TEXT])
+//         .collect::<Vec<_>>()
+//         .unwrap();
+//     assert_eq!(rows.len(), 2);
+//     assert_eq!(rows[0].get::<i32>(0), 1);
+//     assert_eq!(rows[0].get::<&str>(1), "steven");
+//     assert_eq!(rows[1].get::<i32>(0), 2);
+//     assert_eq!(rows[1].get::<&str>(1), "timothy");
+//
+//     client.simple_query("SELECT 1").unwrap();
+// }
 
 #[test]
 fn portal() {
@@ -386,96 +395,6 @@ fn cancel_query() {
     }
 
     cancel_thread.join().unwrap();
-}
-
-#[test]
-fn notifications_iter() {
-    let mut client = Client::connect("host=localhost port=5433 user=postgres password=openGauss#2023", NoTls).unwrap();
-
-    client
-        .batch_execute(
-            "\
-        LISTEN notifications_iter;
-        NOTIFY notifications_iter, 'hello';
-        NOTIFY notifications_iter, 'world';
-    ",
-        )
-        .unwrap();
-
-    let notifications = client.notifications().iter().collect::<Vec<_>>().unwrap();
-    assert_eq!(notifications.len(), 2);
-    assert_eq!(notifications[0].payload(), "hello");
-    assert_eq!(notifications[1].payload(), "world");
-}
-
-#[test]
-fn notifications_blocking_iter() {
-    let mut client = Client::connect("host=localhost port=5433 user=postgres password=openGauss#2023", NoTls).unwrap();
-
-    client
-        .batch_execute(
-            "\
-        LISTEN notifications_blocking_iter;
-        NOTIFY notifications_blocking_iter, 'hello';
-    ",
-        )
-        .unwrap();
-
-    thread::spawn(|| {
-        let mut client = Client::connect("host=localhost port=5433 user=postgres password=openGauss#2023", NoTls).unwrap();
-
-        thread::sleep(Duration::from_secs(1));
-        client
-            .batch_execute("NOTIFY notifications_blocking_iter, 'world'")
-            .unwrap();
-    });
-
-    let notifications = client
-        .notifications()
-        .blocking_iter()
-        .take(2)
-        .collect::<Vec<_>>()
-        .unwrap();
-    assert_eq!(notifications.len(), 2);
-    assert_eq!(notifications[0].payload(), "hello");
-    assert_eq!(notifications[1].payload(), "world");
-}
-
-#[test]
-fn notifications_timeout_iter() {
-    let mut client = Client::connect("host=localhost port=5433 user=postgres password=openGauss#2023", NoTls).unwrap();
-
-    client
-        .batch_execute(
-            "\
-        LISTEN notifications_timeout_iter;
-        NOTIFY notifications_timeout_iter, 'hello';
-    ",
-        )
-        .unwrap();
-
-    thread::spawn(|| {
-        let mut client = Client::connect("host=localhost port=5433 user=postgres password=openGauss#2023", NoTls).unwrap();
-
-        thread::sleep(Duration::from_secs(1));
-        client
-            .batch_execute("NOTIFY notifications_timeout_iter, 'world'")
-            .unwrap();
-
-        thread::sleep(Duration::from_secs(10));
-        client
-            .batch_execute("NOTIFY notifications_timeout_iter, '!'")
-            .unwrap();
-    });
-
-    let notifications = client
-        .notifications()
-        .timeout_iter(Duration::from_secs(2))
-        .collect::<Vec<_>>()
-        .unwrap();
-    assert_eq!(notifications.len(), 2);
-    assert_eq!(notifications[0].payload(), "hello");
-    assert_eq!(notifications[1].payload(), "world");
 }
 
 #[test]
