@@ -3,7 +3,7 @@ services:
   opengauss:
     image: "opengauss/opengauss:5.0.0"
     environment:
-      GS_USER: postgres
+      GS_USERNAME: postgres
       GS_PASSWORD: openGauss#2023
       GS_INITDB_ARGS: "-E utf8 --locale=en_US.utf8"
     ports:
