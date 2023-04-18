@@ -13,7 +13,7 @@ use fallible_iterator::FallibleIterator;
 
 #[test]
 fn prepare() {
-    let mut client = Client::connect("host=localhost port=5433 user=postgres", NoTls).unwrap();
+    let mut client = Client::connect("host=localhost port=5433 user=postgres password=openGauss#2023", NoTls).unwrap();
 
     let stmt = client.prepare("SELECT 1::INT, $1::TEXT").unwrap();
     assert_eq!(stmt.params(), &[Type::TEXT]);
@@ -24,7 +24,7 @@ fn prepare() {
 
 #[test]
 fn query_prepared() {
-    let mut client = Client::connect("host=localhost port=5433 user=postgres", NoTls).unwrap();
+    let mut client = Client::connect("host=localhost port=5433 user=postgres password=openGauss#2023", NoTls).unwrap();
 
     let stmt = client.prepare("SELECT $1::TEXT").unwrap();
     let rows = client.query(&stmt, &[&"hello"]).unwrap();
@@ -34,7 +34,7 @@ fn query_prepared() {
 
 #[test]
 fn query_unprepared() {
-    let mut client = Client::connect("host=localhost port=5433 user=postgres", NoTls).unwrap();
+    let mut client = Client::connect("host=localhost port=5433 user=postgres password=openGauss#2023", NoTls).unwrap();
 
     let rows = client.query("SELECT $1::TEXT", &[&"hello"]).unwrap();
     assert_eq!(rows.len(), 1);
@@ -43,7 +43,7 @@ fn query_unprepared() {
 
 #[test]
 fn transaction_commit() {
-    let mut client = Client::connect("host=localhost port=5433 user=postgres", NoTls).unwrap();
+    let mut client = Client::connect("host=localhost port=5433 user=postgres password=openGauss#2023", NoTls).unwrap();
 
     client
         .simple_query("CREATE TEMPORARY TABLE foo (id SERIAL PRIMARY KEY)")
@@ -64,7 +64,7 @@ fn transaction_commit() {
 
 #[test]
 fn transaction_rollback() {
-    let mut client = Client::connect("host=localhost port=5433 user=postgres", NoTls).unwrap();
+    let mut client = Client::connect("host=localhost port=5433 user=postgres password=openGauss#2023", NoTls).unwrap();
 
     client
         .simple_query("CREATE TEMPORARY TABLE foo (id SERIAL PRIMARY KEY)")
@@ -84,7 +84,7 @@ fn transaction_rollback() {
 
 #[test]
 fn transaction_drop() {
-    let mut client = Client::connect("host=localhost port=5433 user=postgres", NoTls).unwrap();
+    let mut client = Client::connect("host=localhost port=5433 user=postgres password=openGauss#2023", NoTls).unwrap();
 
     client
         .simple_query("CREATE TEMPORARY TABLE foo (id SERIAL PRIMARY KEY)")
@@ -104,8 +104,8 @@ fn transaction_drop() {
 
 #[test]
 fn transaction_drop_immediate_rollback() {
-    let mut client = Client::connect("host=localhost port=5433 user=postgres", NoTls).unwrap();
-    let mut client2 = Client::connect("host=localhost port=5433 user=postgres", NoTls).unwrap();
+    let mut client = Client::connect("host=localhost port=5433 user=postgres password=openGauss#2023", NoTls).unwrap();
+    let mut client2 = Client::connect("host=localhost port=5433 user=postgres password=openGauss#2023", NoTls).unwrap();
 
     client
         .simple_query("CREATE TABLE IF NOT EXISTS foo (id SERIAL PRIMARY KEY)")
@@ -129,7 +129,7 @@ fn transaction_drop_immediate_rollback() {
 
 #[test]
 fn nested_transactions() {
-    let mut client = Client::connect("host=localhost port=5433 user=postgres", NoTls).unwrap();
+    let mut client = Client::connect("host=localhost port=5433 user=postgres password=openGauss#2023", NoTls).unwrap();
 
     client
         .batch_execute("CREATE TEMPORARY TABLE foo (id INT PRIMARY KEY)")
@@ -180,7 +180,7 @@ fn nested_transactions() {
 
 #[test]
 fn savepoints() {
-    let mut client = Client::connect("host=localhost port=5433 user=postgres", NoTls).unwrap();
+    let mut client = Client::connect("host=localhost port=5433 user=postgres password=openGauss#2023", NoTls).unwrap();
 
     client
         .batch_execute("CREATE TEMPORARY TABLE foo (id INT PRIMARY KEY)")
@@ -231,7 +231,7 @@ fn savepoints() {
 
 #[test]
 fn copy_in() {
-    let mut client = Client::connect("host=localhost port=5433 user=postgres", NoTls).unwrap();
+    let mut client = Client::connect("host=localhost port=5433 user=postgres password=openGauss#2023", NoTls).unwrap();
 
     client
         .simple_query("CREATE TEMPORARY TABLE foo (id INT, name TEXT)")
@@ -254,7 +254,7 @@ fn copy_in() {
 
 #[test]
 fn copy_in_abort() {
-    let mut client = Client::connect("host=localhost port=5433 user=postgres", NoTls).unwrap();
+    let mut client = Client::connect("host=localhost port=5433 user=postgres password=openGauss#2023", NoTls).unwrap();
 
     client
         .simple_query("CREATE TEMPORARY TABLE foo (id INT, name TEXT)")
