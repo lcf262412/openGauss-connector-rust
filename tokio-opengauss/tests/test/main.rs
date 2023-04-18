@@ -738,13 +738,6 @@ async fn query_portal() {
     assert_eq!(r2[0].get::<_, &str>(1), "charlie");
 
     assert_eq!(r3.len(), 0);
-
-    let mut client2 = connect("user=postgres password=openGauss#2023").await;
-    client2.batch_execute(
-            "DROP TABLE foo_query_portal",
-        )
-        .await
-        .unwrap();
 }
 
 #[tokio::test]
