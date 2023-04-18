@@ -227,7 +227,7 @@ async fn test_bpchar_params() {
 
     client
         .batch_execute(
-            "CREATE TEMPORARY TABLE foo (
+            "CREATE TABLE foo_bpchar_params (
                 id SERIAL PRIMARY KEY,
                 b CHAR(5)
             )",
@@ -236,7 +236,7 @@ async fn test_bpchar_params() {
         .unwrap();
 
     let stmt = client
-        .prepare("INSERT INTO foo (b) VALUES ($1), ($2), ($3)")
+        .prepare("INSERT INTO foo_bpchar_params (b) VALUES ($1), ($2), ($3)")
         .await
         .unwrap();
     client
@@ -245,7 +245,7 @@ async fn test_bpchar_params() {
         .unwrap();
 
     let stmt = client
-        .prepare("SELECT b FROM foo ORDER BY id")
+        .prepare("SELECT b FROM foo_bpchar_params ORDER BY id")
         .await
         .unwrap();
     let rows = client
@@ -260,9 +260,16 @@ async fn test_bpchar_params() {
         vec![Some("12345".to_owned()), Some("123  ".to_owned()), None],
         rows,
     );
+
+    client.batch_execute(
+            "DROP TABLE foo_bpchar_params",
+        )
+        .await
+        .unwrap();
 }
 
 #[tokio::test]
+#[ignore] //openGauss does not support CITEXT
 async fn test_citext_params() {
     let client = connect("user=postgres password=openGauss#2023").await;
 
