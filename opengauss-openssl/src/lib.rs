@@ -4,7 +4,7 @@
 //!
 //! ```no_run
 //! use openssl::ssl::{SslConnector, SslMethod};
-//! use postgres_openssl::MakeTlsConnector;
+//! use opengauss_openssl::MakeTlsConnector;
 //!
 //! # fn main() -> Result<(), Box<dyn std::error::Error>> {
 //! let mut builder = SslConnector::builder(SslMethod::tls())?;
@@ -12,7 +12,7 @@
 //! let connector = MakeTlsConnector::new(builder.build());
 //!
 //! let connect_future = tokio_opengauss::connect(
-//!     "host=localhost user=postgres sslmode=require",
+//!     "host=localhost user=postgres password=openGauss#2023 sslmode=require",
 //!     connector,
 //! );
 //!
@@ -23,14 +23,14 @@
 //!
 //! ```no_run
 //! use openssl::ssl::{SslConnector, SslMethod};
-//! use postgres_openssl::MakeTlsConnector;
+//! use opengauss_openssl::MakeTlsConnector;
 //!
 //! # fn main() -> Result<(), Box<dyn std::error::Error>> {
 //! let mut builder = SslConnector::builder(SslMethod::tls())?;
 //! builder.set_ca_file("database_cert.pem")?;
 //! let connector = MakeTlsConnector::new(builder.build());
 //!
-//! let client = postgres::Client::connect(
+//! let client = opengauss::Client::connect(
 //!     "host=localhost user=postgres sslmode=require",
 //!     connector,
 //! )?;
