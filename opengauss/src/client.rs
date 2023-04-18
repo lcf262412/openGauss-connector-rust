@@ -66,8 +66,8 @@ impl Client {
     /// ```no_run
     /// use opengauss::{Client, NoTls};
     ///
-    /// # fn main() -> Result<(), postgres::Error> {
-    /// let mut client = Client::connect("host=localhost user=postgres", NoTls)?;
+    /// # fn main() -> Result<(), opengauss::Error> {
+    /// let mut client = Client::connect("host=localhost user=postgres password=openGauss#2023", NoTls)?;
     ///
     /// let bar = 1i32;
     /// let baz = true;
@@ -105,8 +105,8 @@ impl Client {
     /// ```no_run
     /// use opengauss::{Client, NoTls};
     ///
-    /// # fn main() -> Result<(), postgres::Error> {
-    /// let mut client = Client::connect("host=localhost user=postgres", NoTls)?;
+    /// # fn main() -> Result<(), opengauss::Error> {
+    /// let mut client = Client::connect("host=localhost user=postgres password=openGauss#2023", NoTls)?;
     ///
     /// let baz = true;
     /// for row in client.query("SELECT foo FROM bar WHERE baz = $1", &[&baz])? {
@@ -143,8 +143,8 @@ impl Client {
     /// ```no_run
     /// use opengauss::{Client, NoTls};
     ///
-    /// # fn main() -> Result<(), postgres::Error> {
-    /// let mut client = Client::connect("host=localhost user=postgres", NoTls)?;
+    /// # fn main() -> Result<(), opengauss::Error> {
+    /// let mut client = Client::connect("host=localhost user=postgres password=openGauss#2023", NoTls)?;
     ///
     /// let baz = true;
     /// let row = client.query_one("SELECT foo FROM bar WHERE baz = $1", &[&baz])?;
@@ -181,8 +181,8 @@ impl Client {
     /// ```no_run
     /// use opengauss::{Client, NoTls};
     ///
-    /// # fn main() -> Result<(), postgres::Error> {
-    /// let mut client = Client::connect("host=localhost user=postgres", NoTls)?;
+    /// # fn main() -> Result<(), opengauss::Error> {
+    /// let mut client = Client::connect("host=localhost user=postgres password=openGauss#2023", NoTls)?;
     ///
     /// let baz = true;
     /// let row = client.query_opt("SELECT foo FROM bar WHERE baz = $1", &[&baz])?;
@@ -224,8 +224,8 @@ impl Client {
     /// use fallible_iterator::FallibleIterator;
     /// use std::iter;
     ///
-    /// # fn main() -> Result<(), postgres::Error> {
-    /// let mut client = Client::connect("host=localhost user=postgres", NoTls)?;
+    /// # fn main() -> Result<(), opengauss::Error> {
+    /// let mut client = Client::connect("host=localhost user=postgres password=openGauss#2023", NoTls)?;
     ///
     /// let baz = true;
     /// let mut it = client.query_raw("SELECT foo FROM bar WHERE baz = $1", iter::once(baz))?;
@@ -245,8 +245,8 @@ impl Client {
     /// # use opengauss::{Client, NoTls};
     /// use opengauss::types::ToSql;
     /// use fallible_iterator::FallibleIterator;
-    /// # fn main() -> Result<(), postgres::Error> {
-    /// # let mut client = Client::connect("host=localhost user=postgres", NoTls)?;
+    /// # fn main() -> Result<(), opengauss::Error> {
+    /// # let mut client = Client::connect("host=localhost user=postgres password=openGauss#2023", NoTls)?;
     ///
     /// let params: Vec<String> = vec![
     ///     "first param".into(),
@@ -287,8 +287,8 @@ impl Client {
     /// ```no_run
     /// use opengauss::{Client, NoTls};
     ///
-    /// # fn main() -> Result<(), postgres::Error> {
-    /// let mut client = Client::connect("host=localhost user=postgres", NoTls)?;
+    /// # fn main() -> Result<(), opengauss::Error> {
+    /// let mut client = Client::connect("host=localhost user=postgres password=openGauss#2023", NoTls)?;
     ///
     /// let statement = client.prepare("SELECT name FROM people WHERE id = $1")?;
     ///
@@ -315,8 +315,8 @@ impl Client {
     /// use opengauss::{Client, NoTls};
     /// use opengauss::types::Type;
     ///
-    /// # fn main() -> Result<(), postgres::Error> {
-    /// let mut client = Client::connect("host=localhost user=postgres", NoTls)?;
+    /// # fn main() -> Result<(), opengauss::Error> {
+    /// let mut client = Client::connect("host=localhost user=postgres password=openGauss#2023", NoTls)?;
     ///
     /// let statement = client.prepare_typed(
     ///     "SELECT name FROM people WHERE id = $1",
@@ -351,7 +351,7 @@ impl Client {
     /// use std::io::Write;
     ///
     /// # fn main() -> Result<(), Box<dyn std::error::Error>> {
-    /// let mut client = Client::connect("host=localhost user=postgres", NoTls)?;
+    /// let mut client = Client::connect("host=localhost user=postgres password=openGauss#2023", NoTls)?;
     ///
     /// let mut writer = client.copy_in("COPY people FROM stdin")?;
     /// writer.write_all(b"1\tjohn\n2\tjane\n")?;
@@ -379,7 +379,7 @@ impl Client {
     /// use std::io::Read;
     ///
     /// # fn main() -> Result<(), Box<dyn std::error::Error>> {
-    /// let mut client = Client::connect("host=localhost user=postgres", NoTls)?;
+    /// let mut client = Client::connect("host=localhost user=postgres password=openGauss#2023", NoTls)?;
     ///
     /// let mut reader = client.copy_out("COPY people TO stdout")?;
     /// let mut buf = vec![];
@@ -451,8 +451,8 @@ impl Client {
     /// ```no_run
     /// use opengauss::{Client, NoTls};
     ///
-    /// # fn main() -> Result<(), postgres::Error> {
-    /// let mut client = Client::connect("host=localhost user=postgres", NoTls)?;
+    /// # fn main() -> Result<(), opengauss::Error> {
+    /// let mut client = Client::connect("host=localhost user=postgres password=openGauss#2023", NoTls)?;
     ///
     /// let mut transaction = client.transaction()?;
     /// transaction.execute("UPDATE foo SET bar = 10", &[])?;
@@ -477,8 +477,8 @@ impl Client {
     /// ```no_run
     /// use opengauss::{Client, IsolationLevel, NoTls};
     ///
-    /// # fn main() -> Result<(), postgres::Error> {
-    /// let mut client = Client::connect("host=localhost user=postgres", NoTls)?;
+    /// # fn main() -> Result<(), opengauss::Error> {
+    /// let mut client = Client::connect("host=localhost user=postgres password=openGauss#2023", NoTls)?;
     ///
     /// let mut transaction = client.build_transaction()
     ///     .isolation_level(IsolationLevel::RepeatableRead)
@@ -513,7 +513,7 @@ impl Client {
     /// use std::time::Duration;
     ///
     /// # fn main() -> Result<(), Box<dyn std::error::Error>> {
-    /// let mut client = Client::connect("host=localhost user=postgres", NoTls)?;
+    /// let mut client = Client::connect("host=localhost user=postgres password=openGauss#2023", NoTls)?;
     ///
     /// let cancel_token = client.cancel_token();
     ///
