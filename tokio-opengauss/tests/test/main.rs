@@ -122,12 +122,12 @@ async fn insert_select() {
     let client = connect("host=localhost port=5433 user=postgres password=openGauss#2023").await;
 
     client
-        .batch_execute("CREATE TEMPORARY TABLE foo (id SERIAL, name TEXT)")
+        .batch_execute("CREATE TABLE foo_insert_select (id SERIAL, name TEXT)")
         .await
         .unwrap();
 
-    let insert = client.prepare("INSERT INTO foo (name) VALUES ($1), ($2)");
-    let select = client.prepare("SELECT id, name FROM foo ORDER BY id");
+    let insert = client.prepare("INSERT INTO foo_insert_select (name) VALUES ($1), ($2)");
+    let select = client.prepare("SELECT id, name FROM foo_insert_select ORDER BY id");
     let (insert, select) = try_join!(insert, select).unwrap();
 
     let insert = client.execute(&insert, &[&"alice", &"bob"]);
@@ -139,6 +139,11 @@ async fn insert_select() {
     assert_eq!(rows[0].get::<_, &str>(1), "alice");
     assert_eq!(rows[1].get::<_, i32>(0), 2);
     assert_eq!(rows[1].get::<_, &str>(1), "bob");
+
+    client
+        .batch_execute("DROP TABLE foo_insert_select")
+        .await
+        .unwrap();
 }
 
 #[tokio::test]

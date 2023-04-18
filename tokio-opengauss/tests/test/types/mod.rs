@@ -139,6 +139,7 @@ async fn test_i64_params() {
 }
 
 #[tokio::test]
+#[ignore] //pg_lsn does not exist in openGauss
 async fn test_lsn_params() {
     test_type(
         "PG_LSN",
@@ -267,7 +268,7 @@ async fn test_citext_params() {
 
     client
         .batch_execute(
-            "CREATE TEMPORARY TABLE foo (
+            "CREATE TABLE foo_citext_params (
                 id SERIAL PRIMARY KEY,
                 b CITEXT
             )",
@@ -276,7 +277,7 @@ async fn test_citext_params() {
         .unwrap();
 
     let stmt = client
-        .prepare("INSERT INTO foo (b) VALUES ($1), ($2), ($3)")
+        .prepare("INSERT INTO foo_citext_params (b) VALUES ($1), ($2), ($3)")
         .await
         .unwrap();
     client
@@ -285,7 +286,7 @@ async fn test_citext_params() {
         .unwrap();
 
     let stmt = client
-        .prepare("SELECT b FROM foo WHERE b = 'FOOBAR' ORDER BY id")
+        .prepare("SELECT b FROM foo_citext_params WHERE b = 'FOOBAR' ORDER BY id")
         .await
         .unwrap();
     let rows = client
@@ -297,6 +298,13 @@ async fn test_citext_params() {
         .collect::<Vec<String>>();
 
     assert_eq!(vec!["foobar".to_string(), "FooBar".to_string()], rows,);
+
+    client
+        .batch_execute(
+            "DROP TABLE foo_citext_params",
+        )
+        .await
+        .unwrap();
 }
 
 #[tokio::test]
@@ -405,11 +413,11 @@ async fn test_f64_nan_param() {
 async fn test_pg_database_datname() {
     let client = connect("user=postgres password=openGauss#2023").await;
     let stmt = client
-        .prepare("SELECT datname FROM pg_database")
+        .prepare("SELECT datname FROM pg_database order by datname")
         .await
         .unwrap();
     let rows = client.query(&stmt, &[]).await.unwrap();
-    assert_eq!(rows[0].get::<_, &str>(0), "postgres");
+    assert_eq!(rows[0].get::<_, &str>(0), "opengauss");
 }
 
 #[tokio::test]
@@ -418,17 +426,17 @@ async fn test_slice() {
 
     client
         .batch_execute(
-            "CREATE TEMPORARY TABLE foo (
+            "CREATE TABLE foo_slice (
                 id SERIAL PRIMARY KEY,
                 f TEXT
             );
-            INSERT INTO foo (f) VALUES ('a'), ('b'), ('c'), ('d');",
+            INSERT INTO foo_slice (f) VALUES ('a'), ('b'), ('c'), ('d');",
         )
         .await
         .unwrap();
 
     let stmt = client
-        .prepare("SELECT f FROM foo WHERE id = ANY($1)")
+        .prepare("SELECT f FROM foo_slice WHERE id = ANY($1)")
         .await
         .unwrap();
     let rows = client
@@ -440,6 +448,13 @@ async fn test_slice() {
         .collect::<Vec<String>>();
 
     assert_eq!(vec!["a".to_owned(), "c".to_owned(), "d".to_owned()], rows);
+
+    client
+        .batch_execute(
+            "DROP TABLE foo_slice",
+        )
+        .await
+        .unwrap();
 }
 
 #[tokio::test]
@@ -448,7 +463,7 @@ async fn test_slice_wrong_type() {
 
     client
         .batch_execute(
-            "CREATE TEMPORARY TABLE foo (
+            "CREATE TABLE foo_slice_wrong_type (
                 id SERIAL PRIMARY KEY
             )",
         )
@@ -456,7 +471,7 @@ async fn test_slice_wrong_type() {
         .unwrap();
 
     let stmt = client
-        .prepare("SELECT * FROM foo WHERE id = ANY($1)")
+        .prepare("SELECT * FROM foo_slice_wrong_type WHERE id = ANY($1)")
         .await
         .unwrap();
     let err = client.query(&stmt, &[&&[&"hi"][..]]).await.err().unwrap();
@@ -464,6 +479,13 @@ async fn test_slice_wrong_type() {
         Some(e) if e.is::<WrongType>() => {}
         _ => panic!("Unexpected error {:?}", err),
     };
+
+    client
+        .batch_execute(
+            "DROP TABLE foo_slice_wrong_type",
+        )
+        .await
+        .unwrap();
 }
 
 #[tokio::test]
