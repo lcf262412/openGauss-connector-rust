@@ -307,7 +307,7 @@ async fn simple_query() {
 
 #[tokio::test]
 async fn cancel_query_raw() {
-    let client = connect("user=postgres").await;
+    let client = connect("host=localhost port=5433 user=postgres password=openGauss#2023").await;
 
     let socket = TcpStream::connect("127.0.0.1:5433").await.unwrap();
     let cancel_token = client.cancel_token();
@@ -712,7 +712,7 @@ async fn disable_channel_binding() {
 async fn check_send() {
     fn is_send<T: Send>(_: &T) {}
 
-    let f = connect("user=postgres");
+    let f = connect("user=postgres password=openGauss#2023");
     is_send(&f);
     let mut client = f.await;
 

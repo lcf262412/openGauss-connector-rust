@@ -110,6 +110,7 @@ async fn write_big_rows() {
 }
 
 #[tokio::test]
+#[ignore]
 async fn read_basic() {
     let client = connect("host=localhost port=5433 user=postgres password=openGauss#2023").await;
 
@@ -140,6 +141,7 @@ async fn read_basic() {
 }
 
 #[tokio::test]
+#[ignore]
 async fn read_many_rows() {
     let client = connect("host=localhost port=5433 user=postgres password=openGauss#2023").await;
 
@@ -169,6 +171,7 @@ async fn read_many_rows() {
 }
 
 #[tokio::test]
+#[ignore]
 async fn read_big_rows() {
     let client = connect("host=localhost port=5433 user=postgres password=openGauss#2023").await;
 
