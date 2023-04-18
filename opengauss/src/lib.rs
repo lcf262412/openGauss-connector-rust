@@ -3,10 +3,10 @@
 //! # Example
 //!
 //! ```no_run
-//! use postgres::{Client, NoTls};
+//! use opengauss::{Client, NoTls};
 //!
-//! # fn main() -> Result<(), postgres::Error> {
-//! let mut client = Client::connect("host=localhost user=postgres", NoTls)?;
+//! # fn main() -> Result<(), opengauss::Error> {
+//! let mut client = Client::connect("host=localhost user=postgres password=openGauss#2023", NoTls)?;
 //!
 //! client.batch_execute("
 //!     CREATE TABLE person (
