@@ -739,9 +739,9 @@ async fn query_portal() {
 
     assert_eq!(r3.len(), 0);
 
-    client
-        .batch_execute(
-            "CREATE TABLE foo_query_portal",
+    let mut client2 = connect("user=postgres password=openGauss#2023").await;
+    client2.batch_execute(
+            "DROP TABLE foo_query_portal",
         )
         .await
         .unwrap();
