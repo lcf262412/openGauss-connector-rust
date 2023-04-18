@@ -311,7 +311,7 @@ async fn simple_query() {
     }
     assert_eq!(messages.len(), 5);
 
-    let messages = client
+    client
         .simple_query(
             "DROP TABLE foo_simple_query",
         )
