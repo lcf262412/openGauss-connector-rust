@@ -12,7 +12,7 @@ fn defaults() {
         price: Option<f64>,
     }
 
-    let mut conn = Client::connect("user=postgres host=localhost port=5433", NoTls).unwrap();
+    let mut conn = Client::connect("user=postgres host=localhost port=5433 password=openGauss#2023", NoTls).unwrap();
     conn.batch_execute(
         "CREATE TYPE pg_temp.\"InventoryItem\" AS (
             name TEXT,
@@ -57,7 +57,7 @@ fn name_overrides() {
         _price: Option<f64>,
     }
 
-    let mut conn = Client::connect("user=postgres host=localhost port=5433", NoTls).unwrap();
+    let mut conn = Client::connect("user=postgres host=localhost port=5433 password=openGauss#2023", NoTls).unwrap();
     conn.batch_execute(
         "CREATE TYPE pg_temp.inventory_item AS (
             name TEXT,
@@ -98,7 +98,7 @@ fn wrong_name() {
         price: Option<f64>,
     }
 
-    let mut conn = Client::connect("user=postgres host=localhost port=5433", NoTls).unwrap();
+    let mut conn = Client::connect("user=postgres host=localhost port=5433 password=openGauss#2023", NoTls).unwrap();
     conn.batch_execute(
         "CREATE TYPE pg_temp.inventory_item AS (
             name TEXT,
@@ -131,7 +131,7 @@ fn extra_field() {
         foo: i32,
     }
 
-    let mut conn = Client::connect("user=postgres host=localhost port=5433", NoTls).unwrap();
+    let mut conn = Client::connect("user=postgres host=localhost port=5433 password=openGauss#2023", NoTls).unwrap();
     conn.batch_execute(
         "CREATE TYPE pg_temp.inventory_item AS (
             name TEXT,
@@ -163,7 +163,7 @@ fn missing_field() {
         supplier_id: i32,
     }
 
-    let mut conn = Client::connect("user=postgres host=localhost port=5433", NoTls).unwrap();
+    let mut conn = Client::connect("user=postgres host=localhost port=5433 password=openGauss#2023", NoTls).unwrap();
     conn.batch_execute(
         "CREATE TYPE pg_temp.inventory_item AS (
             name TEXT,
@@ -194,7 +194,7 @@ fn wrong_type() {
         price: i32,
     }
 
-    let mut conn = Client::connect("user=postgres host=localhost port=5433", NoTls).unwrap();
+    let mut conn = Client::connect("user=postgres host=localhost port=5433 password=openGauss#2023", NoTls).unwrap();
     conn.batch_execute(
         "CREATE TYPE pg_temp.inventory_item AS (
             name TEXT,
