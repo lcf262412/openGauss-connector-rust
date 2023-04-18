@@ -576,17 +576,17 @@ async fn copy_out() {
 
     client
         .batch_execute(
-            "CREATE TEMPORARY TABLE foo (
+            "CREATE TABLE foo_copy_out (
             id SERIAL,
             name TEXT
         );
 
-        INSERT INTO foo (name) VALUES ('jim'), ('joe');",
+        INSERT INTO foo_copy_out (name) VALUES ('jim'), ('joe');",
         )
         .await
         .unwrap();
 
-    let stmt = client.prepare("COPY foo TO STDOUT").await.unwrap();
+    let stmt = client.prepare("COPY foo_copy_out TO STDOUT").await.unwrap();
     let data = client
         .copy_out(&stmt)
         .await
@@ -598,6 +598,13 @@ async fn copy_out() {
         .await
         .unwrap();
     assert_eq!(&data[..], b"1\tjim\n2\tjoe\n");
+
+    client
+        .batch_execute(
+            "DROP TABLE foo_copy_out",
+        )
+        .await
+        .unwrap();
 }
 
 #[tokio::test]
@@ -729,12 +736,12 @@ async fn require_channel_binding() {
 
 #[tokio::test]
 async fn prefer_channel_binding() {
-    connect("user=postgres channel_binding=prefer").await;
+    connect("user=postgres password=openGauss#2023 channel_binding=prefer").await;
 }
 
 #[tokio::test]
 async fn disable_channel_binding() {
-    connect("user=postgres channel_binding=disable").await;
+    connect("user=postgres password=openGauss#2023 channel_binding=disable").await;
 }
 
 #[tokio::test]
@@ -772,7 +779,7 @@ async fn check_send() {
 
 #[tokio::test]
 async fn query_one() {
-    let client = connect("user=postgres").await;
+    let client = connect("user=postgres password=openGauss#2023").await;
 
     client
         .batch_execute(
@@ -804,7 +811,7 @@ async fn query_one() {
 
 #[tokio::test]
 async fn query_opt() {
-    let client = connect("user=postgres").await;
+    let client = connect("user=postgres password=openGauss#2023").await;
 
     client
         .batch_execute(
