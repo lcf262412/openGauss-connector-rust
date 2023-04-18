@@ -38,7 +38,7 @@
 //!     .build()?;
 //! let connector = MakeTlsConnector::new(connector);
 //!
-//! let client = postgres::Client::connect(
+//! let client = opengauss::Client::connect(
 //!     "host=localhost user=postgres password=openGauss#2023 sslmode=require",
 //!     connector,
 //! )?;
