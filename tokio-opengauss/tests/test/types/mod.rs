@@ -37,7 +37,7 @@ where
     T: PartialEq + for<'a> FromSqlOwned + ToSql + Sync,
     S: fmt::Display,
 {
-    let client = connect("user=postgres").await;
+    let client = connect("user=postgres password=openGauss#2023").await;
 
     for (val, repr) in checks {
         let rows = client
@@ -212,7 +212,7 @@ async fn test_text_params() {
 
 #[tokio::test]
 async fn test_borrowed_text() {
-    let client = connect("user=postgres").await;
+    let client = connect("user=postgres password=openGauss#2023").await;
 
     let stmt = client.prepare("SELECT 'foo'").await.unwrap();
     let rows = client.query(&stmt, &[]).await.unwrap();
@@ -222,7 +222,7 @@ async fn test_borrowed_text() {
 
 #[tokio::test]
 async fn test_bpchar_params() {
-    let client = connect("user=postgres").await;
+    let client = connect("user=postgres password=openGauss#2023").await;
 
     client
         .batch_execute(
@@ -263,7 +263,7 @@ async fn test_bpchar_params() {
 
 #[tokio::test]
 async fn test_citext_params() {
-    let client = connect("user=postgres").await;
+    let client = connect("user=postgres password=openGauss#2023").await;
 
     client
         .batch_execute(
@@ -313,7 +313,7 @@ async fn test_bytea_params() {
 
 #[tokio::test]
 async fn test_borrowed_bytea() {
-    let client = connect("user=postgres").await;
+    let client = connect("user=postgres password=openGauss#2023").await;
     let stmt = client.prepare("SELECT 'foo'::BYTEA").await.unwrap();
     let rows = client.query(&stmt, &[]).await.unwrap();
     let s: &[u8] = rows[0].get(0);
@@ -380,7 +380,7 @@ async fn test_nan_param<T>(sql_type: &str)
 where
     T: PartialEq + ToSql + FromSqlOwned,
 {
-    let client = connect("user=postgres").await;
+    let client = connect("user=postgres password=openGauss#2023").await;
 
     let stmt = client
         .prepare(&format!("SELECT 'NaN'::{}", sql_type))
@@ -403,7 +403,7 @@ async fn test_f64_nan_param() {
 
 #[tokio::test]
 async fn test_pg_database_datname() {
-    let client = connect("user=postgres").await;
+    let client = connect("user=postgres password=openGauss#2023").await;
     let stmt = client
         .prepare("SELECT datname FROM pg_database")
         .await
@@ -414,7 +414,7 @@ async fn test_pg_database_datname() {
 
 #[tokio::test]
 async fn test_slice() {
-    let client = connect("user=postgres").await;
+    let client = connect("user=postgres password=openGauss#2023").await;
 
     client
         .batch_execute(
@@ -444,7 +444,7 @@ async fn test_slice() {
 
 #[tokio::test]
 async fn test_slice_wrong_type() {
-    let client = connect("user=postgres").await;
+    let client = connect("user=postgres password=openGauss#2023").await;
 
     client
         .batch_execute(
@@ -468,7 +468,7 @@ async fn test_slice_wrong_type() {
 
 #[tokio::test]
 async fn test_slice_range() {
-    let client = connect("user=postgres").await;
+    let client = connect("user=postgres password=openGauss#2023").await;
 
     let stmt = client.prepare("SELECT $1::INT8RANGE").await.unwrap();
     let err = client.query(&stmt, &[&&[&1i64][..]]).await.err().unwrap();
@@ -514,7 +514,7 @@ async fn domain() {
         }
     }
 
-    let client = connect("user=postgres").await;
+    let client = connect("user=postgres password=openGauss#2023").await;
 
     client
         .batch_execute(
@@ -541,7 +541,7 @@ async fn domain() {
 
 #[tokio::test]
 async fn composite() {
-    let client = connect("user=postgres").await;
+    let client = connect("user=postgres password=openGauss#2023").await;
 
     client
         .batch_execute(
@@ -572,7 +572,7 @@ async fn composite() {
 
 #[tokio::test]
 async fn enum_() {
-    let client = connect("user=postgres").await;
+    let client = connect("user=postgres password=openGauss#2023").await;
 
     client
         .batch_execute("CREATE TYPE pg_temp.mood AS ENUM ('sad', 'ok', 'happy')")

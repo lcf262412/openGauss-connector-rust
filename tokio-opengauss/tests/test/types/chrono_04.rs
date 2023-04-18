@@ -175,7 +175,7 @@ async fn test_special_params_without_wrapper() {
         );
     }
 
-    let mut client = connect("user=postgres").await;
+    let mut client = connect("user=postgres password=openGauss#2023").await;
 
     assert_overflows::<DateTime<Utc>>(&mut client, "'-infinity'", "timestamptz").await;
     assert_overflows::<DateTime<Utc>>(&mut client, "'infinity'", "timestamptz").await;
