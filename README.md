@@ -38,7 +38,7 @@ TLS support for opengauss and tokio-opengauss via openssl.
 The test suite requires openGauss to be running in the correct configuration. The easiest way to do this is with docker:
 
 1. Install `docker` and `docker-compose`.
-    1. On ubuntu: `sudo apt install docker.io docker-compose`.
+    1. On centos and openEuler: `sudo yum install docker docker-compose`.
 1. Make sure your user has permissions for docker.
     1. On ubuntu: ``sudo usermod -aG docker $USER``
 1. Change to top-level directory of `openGauss-connector-rust` repo.
