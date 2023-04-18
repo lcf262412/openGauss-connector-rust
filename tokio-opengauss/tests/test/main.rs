@@ -37,7 +37,7 @@ async fn connect(s: &str) -> Client {
 
 #[tokio::test]
 async fn plain_password_missing() {
-    connect_raw("user=pass_user dbname=postgres")
+    connect_raw("host=localhost port=5433 user=postgres password=openGauss#2023")
         .await
         .err()
         .unwrap();
@@ -45,7 +45,7 @@ async fn plain_password_missing() {
 
 #[tokio::test]
 async fn plain_password_wrong() {
-    match connect_raw("user=pass_user password=foo dbname=postgres").await {
+    match connect_raw("host=localhost port=5433 user=postgres password=openGauss#2023").await {
         Ok(_) => panic!("unexpected success"),
         Err(ref e) if e.code() == Some(&SqlState::INVALID_PASSWORD) => {}
         Err(e) => panic!("{}", e),
@@ -54,7 +54,7 @@ async fn plain_password_wrong() {
 
 #[tokio::test]
 async fn plain_password_ok() {
-    connect("user=pass_user password=password dbname=postgres").await;
+    connect("host=localhost port=5433 user=postgres password=openGauss#2023").await;
 }
 
 #[tokio::test]
@@ -98,7 +98,7 @@ async fn scram_password_wrong() {
 
 #[tokio::test]
 async fn scram_password_ok() {
-    connect("user=scram_user password=password dbname=postgres").await;
+    connect("host=localhost port=5433 user=postgres password=openGauss#2023").await;
 }
 
 #[tokio::test]
@@ -119,7 +119,7 @@ async fn pipelined_prepare() {
 
 #[tokio::test]
 async fn insert_select() {
-    let client = connect("user=postgres").await;
+    let client = connect("host=localhost port=5433 user=postgres password=openGauss#2023").await;
 
     client
         .batch_execute("CREATE TEMPORARY TABLE foo (id SERIAL, name TEXT)")

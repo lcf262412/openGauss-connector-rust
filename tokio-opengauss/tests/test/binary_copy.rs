@@ -5,7 +5,7 @@ use tokio_opengauss::types::Type;
 
 #[tokio::test]
 async fn write_basic() {
-    let client = connect("user=postgres").await;
+    let client = connect("host=localhost port=5433 user=postgres password=openGauss#2023").await;
 
     client
         .batch_execute("CREATE TEMPORARY TABLE foo (id INT, bar TEXT)")
@@ -39,7 +39,7 @@ async fn write_basic() {
 
 #[tokio::test]
 async fn write_many_rows() {
-    let client = connect("user=postgres").await;
+    let client = connect("host=localhost port=5433 user=postgres password=openGauss#2023").await;
 
     client
         .batch_execute("CREATE TEMPORARY TABLE foo (id INT, bar TEXT)")
@@ -75,7 +75,7 @@ async fn write_many_rows() {
 
 #[tokio::test]
 async fn write_big_rows() {
-    let client = connect("user=postgres").await;
+    let client = connect("host=localhost port=5433 user=postgres password=openGauss#2023").await;
 
     client
         .batch_execute("CREATE TEMPORARY TABLE foo (id INT, bar BYTEA)")
@@ -111,7 +111,7 @@ async fn write_big_rows() {
 
 #[tokio::test]
 async fn read_basic() {
-    let client = connect("user=postgres").await;
+    let client = connect("host=localhost port=5433 user=postgres password=openGauss#2023").await;
 
     client
         .batch_execute(
@@ -141,7 +141,7 @@ async fn read_basic() {
 
 #[tokio::test]
 async fn read_many_rows() {
-    let client = connect("user=postgres").await;
+    let client = connect("host=localhost port=5433 user=postgres password=openGauss#2023").await;
 
     client
         .batch_execute(
@@ -170,7 +170,7 @@ async fn read_many_rows() {
 
 #[tokio::test]
 async fn read_big_rows() {
-    let client = connect("user=postgres").await;
+    let client = connect("host=localhost port=5433 user=postgres password=openGauss#2023").await;
 
     client
         .batch_execute("CREATE TEMPORARY TABLE foo (id INT, bar BYTEA)")
