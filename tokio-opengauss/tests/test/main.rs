@@ -143,7 +143,7 @@ async fn insert_select() {
 
 #[tokio::test]
 async fn custom_enum() {
-    let client = connect("user=postgres").await;
+    let client = connect("user=postgres password=openGauss#2023").await;
 
     client
         .batch_execute(
@@ -172,7 +172,7 @@ async fn custom_enum() {
 
 #[tokio::test]
 async fn custom_domain() {
-    let client = connect("user=postgres").await;
+    let client = connect("user=postgres password=openGauss#2023").await;
 
     client
         .batch_execute("CREATE DOMAIN pg_temp.session_id AS bytea CHECK(octet_length(VALUE) = 16)")
@@ -188,7 +188,7 @@ async fn custom_domain() {
 
 #[tokio::test]
 async fn custom_array() {
-    let client = connect("user=postgres").await;
+    let client = connect("user=postgres password=openGauss#2023").await;
 
     let select = client.prepare("SELECT $1::HSTORE[]").await.unwrap();
 
@@ -205,7 +205,7 @@ async fn custom_array() {
 
 #[tokio::test]
 async fn custom_composite() {
-    let client = connect("user=postgres").await;
+    let client = connect("user=postgres password=openGauss#2023").await;
 
     client
         .batch_execute(
@@ -237,7 +237,7 @@ async fn custom_composite() {
 
 #[tokio::test]
 async fn custom_range() {
-    let client = connect("user=postgres").await;
+    let client = connect("user=postgres password=openGauss#2023").await;
 
     client
         .batch_execute(
@@ -258,7 +258,7 @@ async fn custom_range() {
 
 #[tokio::test]
 async fn simple_query() {
-    let client = connect("user=postgres").await;
+    let client = connect("user=postgres password=openGauss#2023").await;
 
     let messages = client
         .simple_query(
@@ -324,11 +324,11 @@ async fn cancel_query_raw() {
 
 #[tokio::test]
 async fn transaction_commit() {
-    let mut client = connect("user=postgres").await;
+    let mut client = connect("user=postgres password=openGauss#2023").await;
 
     client
         .batch_execute(
-            "CREATE TEMPORARY TABLE foo(
+            "CREATE TABLE foo_transaction_commit(
                 id SERIAL,
                 name TEXT
             )",
@@ -338,25 +338,32 @@ async fn transaction_commit() {
 
     let transaction = client.transaction().await.unwrap();
     transaction
-        .batch_execute("INSERT INTO foo (name) VALUES ('steven')")
+        .batch_execute("INSERT INTO foo_transaction_commit (name) VALUES ('steven')")
         .await
         .unwrap();
     transaction.commit().await.unwrap();
 
-    let stmt = client.prepare("SELECT name FROM foo").await.unwrap();
+    let stmt = client.prepare("SELECT name FROM foo_transaction_commit").await.unwrap();
     let rows = client.query(&stmt, &[]).await.unwrap();
 
     assert_eq!(rows.len(), 1);
     assert_eq!(rows[0].get::<_, &str>(0), "steven");
+
+    client
+        .batch_execute(
+            "DROP TABLE foo_transaction_commit",
+        )
+        .await
+        .unwrap();
 }
 
 #[tokio::test]
 async fn transaction_rollback() {
-    let mut client = connect("user=postgres").await;
+    let mut client = connect("user=postgres password=openGauss#2023").await;
 
     client
         .batch_execute(
-            "CREATE TEMPORARY TABLE foo(
+            "CREATE TABLE foo_transaction_rollback(
                 id SERIAL,
                 name TEXT
             )",
@@ -366,24 +373,31 @@ async fn transaction_rollback() {
 
     let transaction = client.transaction().await.unwrap();
     transaction
-        .batch_execute("INSERT INTO foo (name) VALUES ('steven')")
+        .batch_execute("INSERT INTO foo_transaction_rollback (name) VALUES ('steven')")
         .await
         .unwrap();
     transaction.rollback().await.unwrap();
 
-    let stmt = client.prepare("SELECT name FROM foo").await.unwrap();
+    let stmt = client.prepare("SELECT name FROM foo_transaction_rollback").await.unwrap();
     let rows = client.query(&stmt, &[]).await.unwrap();
 
     assert_eq!(rows.len(), 0);
+
+    client
+        .batch_execute(
+            "DROP TABLE foo_transaction_rollback",
+        )
+        .await
+        .unwrap();
 }
 
 #[tokio::test]
 async fn transaction_rollback_drop() {
-    let mut client = connect("user=postgres").await;
+    let mut client = connect("user=postgres password=openGauss#2023").await;
 
     client
         .batch_execute(
-            "CREATE TEMPORARY TABLE foo(
+            "CREATE TABLE foo_transaction_rollback_drop(
                 id SERIAL,
                 name TEXT
             )",
@@ -393,24 +407,31 @@ async fn transaction_rollback_drop() {
 
     let transaction = client.transaction().await.unwrap();
     transaction
-        .batch_execute("INSERT INTO foo (name) VALUES ('steven')")
+        .batch_execute("INSERT INTO foo_transaction_rollback_drop (name) VALUES ('steven')")
         .await
         .unwrap();
     drop(transaction);
 
-    let stmt = client.prepare("SELECT name FROM foo").await.unwrap();
+    let stmt = client.prepare("SELECT name FROM foo_transaction_rollback_drop").await.unwrap();
     let rows = client.query(&stmt, &[]).await.unwrap();
 
     assert_eq!(rows.len(), 0);
+
+    client
+        .batch_execute(
+            "DROP TABLE foo_transaction_rollback_drop",
+        )
+        .await
+        .unwrap();
 }
 
 #[tokio::test]
 async fn transaction_builder() {
-    let mut client = connect("user=postgres").await;
+    let mut client = connect("user=postgres password=openGauss#2023").await;
 
     client
         .batch_execute(
-            "CREATE TEMPORARY TABLE foo(
+            "CREATE TABLE foo_transaction_builder(
                 id SERIAL,
                 name TEXT
             )",
@@ -427,21 +448,28 @@ async fn transaction_builder() {
         .await
         .unwrap();
     transaction
-        .batch_execute("INSERT INTO foo (name) VALUES ('steven')")
+        .batch_execute("INSERT INTO foo_transaction_builder (name) VALUES ('steven')")
         .await
         .unwrap();
     transaction.commit().await.unwrap();
 
-    let stmt = client.prepare("SELECT name FROM foo").await.unwrap();
+    let stmt = client.prepare("SELECT name FROM foo_transaction_builder").await.unwrap();
     let rows = client.query(&stmt, &[]).await.unwrap();
 
     assert_eq!(rows.len(), 1);
     assert_eq!(rows[0].get::<_, &str>(0), "steven");
+
+    client
+        .batch_execute(
+            "DROP TABLE foo_transaction_builder",
+        )
+        .await
+        .unwrap();
 }
 
 #[tokio::test]
 async fn copy_in() {
-    let client = connect("user=postgres").await;
+    let client = connect("user=postgres password=openGauss#2023").await;
 
     client
         .batch_execute(
@@ -481,7 +509,7 @@ async fn copy_in() {
 
 #[tokio::test]
 async fn copy_in_large() {
-    let client = connect("user=postgres").await;
+    let client = connect("user=postgres password=openGauss#2023").await;
 
     client
         .batch_execute(
@@ -517,7 +545,7 @@ async fn copy_in_large() {
 
 #[tokio::test]
 async fn copy_in_error() {
-    let client = connect("user=postgres").await;
+    let client = connect("user=postgres password=openGauss#2023").await;
 
     client
         .batch_execute(
@@ -544,7 +572,7 @@ async fn copy_in_error() {
 
 #[tokio::test]
 async fn copy_out() {
-    let client = connect("user=postgres").await;
+    let client = connect("user=postgres password=openGauss#2023").await;
 
     client
         .batch_execute(
@@ -576,7 +604,7 @@ async fn copy_out() {
 async fn notices() {
     let long_name = "x".repeat(65);
     let (client, mut connection) =
-        connect_raw(&format!("user=postgres application_name={}", long_name,))
+        connect_raw(&format!("user=postgres password=openGauss#2023 application_name={}", long_name,))
             .await
             .unwrap();
 
@@ -613,6 +641,7 @@ async fn notices() {
 }
 
 #[tokio::test]
+#[ignore] //openGauss does not support listen
 async fn notifications() {
     let (client, mut connection) = connect_raw("user=postgres").await.unwrap();
 
@@ -649,7 +678,7 @@ async fn notifications() {
 
 #[tokio::test]
 async fn query_portal() {
-    let mut client = connect("user=postgres").await;
+    let mut client = connect("user=postgres password=openGauss#2023").await;
 
     client
         .batch_execute(
