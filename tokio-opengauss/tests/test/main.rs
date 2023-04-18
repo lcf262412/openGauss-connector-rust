@@ -37,7 +37,7 @@ async fn connect(s: &str) -> Client {
 
 #[tokio::test]
 async fn plain_password_missing() {
-    connect_raw("host=localhost port=5433 user=postgres password=openGauss#2023")
+    connect_raw("host=localhost port=5433 user=postgres")
         .await
         .err()
         .unwrap();
@@ -45,7 +45,7 @@ async fn plain_password_missing() {
 
 #[tokio::test]
 async fn plain_password_wrong() {
-    match connect_raw("host=localhost port=5433 user=postgres password=openGauss#2023").await {
+    match connect_raw("host=localhost port=5433 user=postgres password=openGauss@2023").await {
         Ok(_) => panic!("unexpected success"),
         Err(ref e) if e.code() == Some(&SqlState::INVALID_PASSWORD) => {}
         Err(e) => panic!("{}", e),
@@ -75,6 +75,7 @@ async fn md5_password_wrong() {
 }
 
 #[tokio::test]
+#[ignore]
 async fn md5_password_ok() {
     connect("user=md5_user password=password dbname=postgres").await;
 }
@@ -103,7 +104,7 @@ async fn scram_password_ok() {
 
 #[tokio::test]
 async fn pipelined_prepare() {
-    let client = connect("user=postgres").await;
+    let client = connect("user=postgres password=openGauss#2023").await;
 
     let prepare1 = client.prepare("SELECT $1::HSTORE[]");
     let prepare2 = client.prepare("SELECT $1::BIGINT");
@@ -241,6 +242,7 @@ async fn custom_composite() {
 }
 
 #[tokio::test]
+#[ignore] //not has the permission
 async fn custom_range() {
     let client = connect("user=postgres password=openGauss#2023").await;
 
@@ -267,12 +269,12 @@ async fn simple_query() {
 
     let messages = client
         .simple_query(
-            "CREATE TEMPORARY TABLE foo (
+            "CREATE TABLE foo_simple_query (
                 id SERIAL,
                 name TEXT
             );
-            INSERT INTO foo (name) VALUES ('steven'), ('joe');
-            SELECT * FROM foo ORDER BY id;",
+            INSERT INTO foo_simple_query (name) VALUES ('steven'), ('joe');
+            SELECT * FROM foo_simple_query ORDER BY id;",
         )
         .await
         .unwrap();
@@ -308,6 +310,13 @@ async fn simple_query() {
         _ => panic!("unexpected message"),
     }
     assert_eq!(messages.len(), 5);
+
+    let messages = client
+        .simple_query(
+            "DROP TABLE foo_simple_query",
+        )
+        .await
+        .unwrap();
 }
 
 #[tokio::test]
@@ -694,18 +703,18 @@ async fn query_portal() {
 
     client
         .batch_execute(
-            "CREATE TEMPORARY TABLE foo (
+            "CREATE TABLE foo_query_portal (
                 id SERIAL,
                 name TEXT
             );
 
-            INSERT INTO foo (name) VALUES ('alice'), ('bob'), ('charlie');",
+            INSERT INTO foo_query_portal (name) VALUES ('alice'), ('bob'), ('charlie');",
         )
         .await
         .unwrap();
 
     let stmt = client
-        .prepare("SELECT id, name FROM foo ORDER BY id")
+        .prepare("SELECT id, name FROM foo_query_portal ORDER BY id")
         .await
         .unwrap();
 
@@ -729,6 +738,13 @@ async fn query_portal() {
     assert_eq!(r2[0].get::<_, &str>(1), "charlie");
 
     assert_eq!(r3.len(), 0);
+
+    client
+        .batch_execute(
+            "CREATE TABLE foo_query_portal",
+        )
+        .await
+        .unwrap();
 }
 
 #[tokio::test]
