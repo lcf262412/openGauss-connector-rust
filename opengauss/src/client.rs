@@ -64,7 +64,7 @@ impl Client {
     /// # Example
     ///
     /// ```no_run
-    /// use postgres::{Client, NoTls};
+    /// use opengauss::{Client, NoTls};
     ///
     /// # fn main() -> Result<(), postgres::Error> {
     /// let mut client = Client::connect("host=localhost user=postgres", NoTls)?;
@@ -103,7 +103,7 @@ impl Client {
     /// # Examples
     ///
     /// ```no_run
-    /// use postgres::{Client, NoTls};
+    /// use opengauss::{Client, NoTls};
     ///
     /// # fn main() -> Result<(), postgres::Error> {
     /// let mut client = Client::connect("host=localhost user=postgres", NoTls)?;
@@ -141,7 +141,7 @@ impl Client {
     /// # Examples
     ///
     /// ```no_run
-    /// use postgres::{Client, NoTls};
+    /// use opengauss::{Client, NoTls};
     ///
     /// # fn main() -> Result<(), postgres::Error> {
     /// let mut client = Client::connect("host=localhost user=postgres", NoTls)?;
@@ -179,7 +179,7 @@ impl Client {
     /// # Examples
     ///
     /// ```no_run
-    /// use postgres::{Client, NoTls};
+    /// use opengauss::{Client, NoTls};
     ///
     /// # fn main() -> Result<(), postgres::Error> {
     /// let mut client = Client::connect("host=localhost user=postgres", NoTls)?;
@@ -220,7 +220,7 @@ impl Client {
     /// # Examples
     ///
     /// ```no_run
-    /// use postgres::{Client, NoTls};
+    /// use opengauss::{Client, NoTls};
     /// use fallible_iterator::FallibleIterator;
     /// use std::iter;
     ///
@@ -242,8 +242,8 @@ impl Client {
     /// this the type must explicitly be converted to `&dyn ToSql`.
     ///
     /// ```no_run
-    /// # use postgres::{Client, NoTls};
-    /// use postgres::types::ToSql;
+    /// # use opengauss::{Client, NoTls};
+    /// use opengauss::types::ToSql;
     /// use fallible_iterator::FallibleIterator;
     /// # fn main() -> Result<(), postgres::Error> {
     /// # let mut client = Client::connect("host=localhost user=postgres", NoTls)?;
@@ -285,7 +285,7 @@ impl Client {
     /// # Examples
     ///
     /// ```no_run
-    /// use postgres::{Client, NoTls};
+    /// use opengauss::{Client, NoTls};
     ///
     /// # fn main() -> Result<(), postgres::Error> {
     /// let mut client = Client::connect("host=localhost user=postgres", NoTls)?;
@@ -312,8 +312,8 @@ impl Client {
     /// # Examples
     ///
     /// ```no_run
-    /// use postgres::{Client, NoTls};
-    /// use postgres::types::Type;
+    /// use opengauss::{Client, NoTls};
+    /// use opengauss::types::Type;
     ///
     /// # fn main() -> Result<(), postgres::Error> {
     /// let mut client = Client::connect("host=localhost user=postgres", NoTls)?;
@@ -347,7 +347,7 @@ impl Client {
     /// # Examples
     ///
     /// ```no_run
-    /// use postgres::{Client, NoTls};
+    /// use opengauss::{Client, NoTls};
     /// use std::io::Write;
     ///
     /// # fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -375,7 +375,7 @@ impl Client {
     /// # Examples
     ///
     /// ```no_run
-    /// use postgres::{Client, NoTls};
+    /// use opengauss::{Client, NoTls};
     /// use std::io::Read;
     ///
     /// # fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -449,7 +449,7 @@ impl Client {
     /// # Examples
     ///
     /// ```no_run
-    /// use postgres::{Client, NoTls};
+    /// use opengauss::{Client, NoTls};
     ///
     /// # fn main() -> Result<(), postgres::Error> {
     /// let mut client = Client::connect("host=localhost user=postgres", NoTls)?;
@@ -475,7 +475,7 @@ impl Client {
     /// # Examples
     ///
     /// ```no_run
-    /// use postgres::{Client, IsolationLevel, NoTls};
+    /// use opengauss::{Client, IsolationLevel, NoTls};
     ///
     /// # fn main() -> Result<(), postgres::Error> {
     /// let mut client = Client::connect("host=localhost user=postgres", NoTls)?;
@@ -507,8 +507,8 @@ impl Client {
     /// # Examples
     ///
     /// ```no_run
-    /// use postgres::{Client, NoTls};
-    /// use postgres::error::SqlState;
+    /// use opengauss::{Client, NoTls};
+    /// use opengauss::error::SqlState;
     /// use std::thread;
     /// use std::time::Duration;
     ///
