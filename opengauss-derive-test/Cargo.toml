@@ -1,0 +1,11 @@
+[package]
+name = "opengauss-derive-test"
+version = "0.1.0"
+authors = ["He Guofeng <hgf199@126.com>"]
+edition = "2018"
+
+[dev-dependencies]
+trybuild = "1.0"
+
+opengauss-types = { path = "../opengauss-types", features = ["derive"] }
+opengauss = { path = "../opengauss" }

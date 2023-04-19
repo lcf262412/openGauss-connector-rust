@@ -1,6 +1,10 @@
 version: '2'
 services:
-  postgres:
-    image: "sfackler/rust-postgres-test:6"
+  opengauss:
+    image: "opengauss/opengauss:5.0.0"
+    environment:
+      GS_USERNAME: postgres
+      GS_PASSWORD: openGauss#2023
+      GS_INITDB_ARGS: "-E utf8 --locale=en_US.utf8"
     ports:
-    - 5433:5433
+    - 5433:5432
